@@ -14,7 +14,87 @@ import numpy as np
 
 
 1. No of male and female applied for loan?
+
 loans_age = df.groupby(['Gender'], as_index=False)['LoanAmount'].count().sort_values(by='LoanAmount', ascending=False)
 plt.bar(loans_age.Gender,loans_age.LoanAmount)
 for i,value in enumerate(loans_age.LoanAmount):
     plt.text(i,value + 0.1, str(value), ha='center', va='bottom')
+
+
+
+2.No of married male applied for loan?
+
+Married_Male=df[df['Gender']=='Male']['Married'].value_counts()
+plt.bar(Married_Male.index,Married_Male.values,color='black',edgecolor='r')
+for i,value in enumerate(Married_Male.values):
+    plt.text(i,value+0.1,str(value),ha='center',va='bottom')
+
+
+3.educational Background who applied for loan?
+
+plt.pie(df.Education.value_counts(),labels=['Graduate','Not Graduate'],autopct='%1.1f%%',explode=(0,0),colors=('pink','y'))
+
+
+
+4.credit history wise loan status ?
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Assuming df is your DataFrame and it has 'Sex' and 'Survived' columns
+# Create a crosstab to get counts of survivors and non-survivors by gender
+loan_credit_hist = pd.crosstab(df['Loan_Status'], df['Credit_History'])
+
+# Plot the stacked bar chart
+loan_credit_hist.plot(kind='bar', stacked=True, color=['#1f77b4', '#ff7f0e'])
+
+# Add labels and title
+plt.xlabel('Loan_Status')
+plt.ylabel('Count')
+plt.title('Loan_Status Credit_History')
+plt.legend (title='Credit_History', loc='upper right')
+plt.show()
+
+5.applied for loan by years  wise?
+
+df['ApplicationDate'] = pd.to_datetime(df['ApplicationDate'], dayfirst=True)
+# Extract the year and add it as a new column
+df['Year'] = df['ApplicationDate'].dt.year
+
+year_wise_sum=df.groupby(['Year'], as_index=False)['LoanAmount'].sum().sort_values(by='Year')
+plt.pie(year_wise_sum.LoanAmount,labels=[2016,2017,2018,2019],explode=(0,.2,0,0))
+
+
+6. high value applicant by income
+
+high_value_applicant=df.groupby(['Loan_ID'], as_index=False)['LoanAmount'].sum().sort_values(by='LoanAmount',ascending=False).head(5)
+plt.bar(high_value_applicant.Loan_ID,high_value_applicant.LoanAmount)
+
+# Add data points
+for i, value in enumerate(high_value_applicant.LoanAmount):
+    plt.text(i, value + 0.1, str(value), ha='center', va='bottom')
+
+7.region wise loan application?
+
+Property_Area_loanAmount=df.groupby(['Property_Area'], as_index=False)['LoanAmount'].sum().sort_values(by='LoanAmount',ascending=False)
+pie1=plt.pie(Property_Area_loanAmount.LoanAmount,labels=['Rural', 'Semiurban', 'Urban'],autopct='%0.1f%%',radius=1)
+pie2=plt.pie(Property_Area_loanAmount.LoanAmount,radius=.5,colors="w")
+
+
+8.applied for loan Months wise?
+
+df['ApplicationDate'] = pd.to_datetime(df['ApplicationDate'], dayfirst=True)
+#Extract the year and add it as a new column
+df['month'] = df['ApplicationDate'].dt.month
+
+month_wise_sum=df.groupby(['month'], as_index=False)['LoanAmount'].sum().sort_values(by='month')
+
+sns.set(rc={'figure.figsize':(16,5)})
+sns.barplot(data = month_wise_sum, x = 'month',y= 'LoanAmount',palette="muted")
+
+ax = sns.countplot(data = df, x = 'month')
+for bars in ax.containers:
+    ax.bar_label(bars)
+    
+
+
