@@ -1,0 +1,20 @@
+import pandas as pd
+df=pd.read_csv("loans_join.csv")
+
+df.head(5)
+
+df.isnull().sum()
+
+df.info()
+df.describe()
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+
+1. No of male and female applied for loan?
+loans_age = df.groupby(['Gender'], as_index=False)['LoanAmount'].count().sort_values(by='LoanAmount', ascending=False)
+plt.bar(loans_age.Gender,loans_age.LoanAmount)
+for i,value in enumerate(loans_age.LoanAmount):
+    plt.text(i,value + 0.1, str(value), ha='center', va='bottom')
